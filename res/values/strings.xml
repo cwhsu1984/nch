@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">novel</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Home -->
+    <string name="search">小說查詢</string>
+    <string name="add">近期新增</string>
+    <string name="classes">分類索引</string>
+    <string name="mybook">我的書庫</string>
+    <string name="spwriter">特約作家</string>
+    <string name="writer">作家專區</string>
+    <string name="guestbook">貼文留言</string>
+    <string name="hot">排行 / 評分榜</string>
+    
+    <!-- Search -->
+    <string name="search_book">作品查詢</string>
+    <string name="search_writer">作家查詢</string>
+    <string name ="search_button">查詢</string>
+    <string name ="not_found">請重新選擇或輸入搜尋條件!!</string>
+</resources>
