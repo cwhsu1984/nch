@@ -7,10 +7,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 
 public class SearchActivity extends FragmentActivity {
-	
+
 	static final String FRAGMENT_TAG = "search";
 	SearchFragment mSearchFragment;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -20,10 +20,11 @@ public class SearchActivity extends FragmentActivity {
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		// Use fragment tag to check if the fragment existed to prevent fragment overlap
 		// by adding new fragment.
-		if (fragmentManager.findFragmentByTag(FRAGMENT_TAG) == null) {
+		mSearchFragment = (SearchFragment) fragmentManager.findFragmentByTag(FRAGMENT_TAG);
+		if (mSearchFragment == null) {
 			mSearchFragment = new SearchFragment();
 			fragmentTransaction.add(R.id.search_layout, mSearchFragment, FRAGMENT_TAG).commit();
-		}		
+		}
 	}
 
 	@Override
@@ -32,7 +33,7 @@ public class SearchActivity extends FragmentActivity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+
 	public SearchFragment geSearchFragment() {
 		return mSearchFragment;
 	}
