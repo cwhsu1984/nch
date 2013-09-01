@@ -19,22 +19,23 @@ public class SearchResultParser {
 	static final int VOTE = 7;
 	static final int COMMENT = 8;
 	static final int COLUMN_SIZE = 9;
-	
+
 	static final int NAME_URL = 0;
 	static final int AUTHOR_URL = 1;
 	static final int VOTE_URL = 2;
 	static final int COMMENT_URL = 3;
-	
-	public static ArrayList<Novel> parse(String html) {		
+
+	public static SearchResult parse(String html) {
 		Document doc = Jsoup.parse(html);
 		// select novels by table color
 		Elements tables = doc.select("tr[bgcolor=#9BC2E3], tr[bgcolor=#E1E1E1]");
-		ArrayList<Novel> novels = new ArrayList<Novel> ();
-		
+		SearchResult result = new SearchResult();
+		ArrayList<Novel> novels = result.novels;
+
 		System.out.println("table size " + tables.size());
 		for (Element t : tables) {
 			Elements td = t.select("td").select("font");
-			
+
 			/*
 			int i = 0;
 			System.out.println("column size " + td.size());
@@ -46,7 +47,7 @@ public class SearchResultParser {
 				System.out.println(a.text());
 				System.out.println(a.attr("href"));
 			}
-			*/
+			 */
 			// Prevent index out of bounds by checking column size
 			if (td.size() >= COLUMN_SIZE) {
 
@@ -58,7 +59,7 @@ public class SearchResultParser {
 				novel.update = td.get(UPDATE).text();
 				novel.popularity = td.get(POPULARITY).text();
 				novel.vote = td.get(VOTE).text();
-				novel.commentUrl = td.get(COMMENT).text();		
+				novel.commentUrl = td.get(COMMENT).text();
 
 
 				Elements href = t.select("td").select("a[href]");
@@ -66,10 +67,35 @@ public class SearchResultParser {
 				novel.authorUrl = NCH + href.get(AUTHOR_URL).attr("href");
 				novel.voteUrl = NCH + href.get(VOTE_URL).attr("href");
 				novel.commentUrl = NCH + href.get(COMMENT_URL).attr("href");
-				System.out.println(novel);
+				//System.out.println(novel);
 				novels.add(novel);
 			}
 		}
-		return novels;
+
+		// Select total data count, total page, current page by background color
+		Elements info = doc.select("table").select("[bgcolor=#3366cc]");
+		if (info.size() != 0) {
+			result.totalPages = Integer.valueOf(info.get(1).text());
+
+			// Select the url of the next page.
+			Elements url = doc.select("table").select("[bgcolor=#c0c0c0]").select("a[href]");
+			result.nextPageUrl = NCH.substring(0, NCH.length() - 1) + url.get(1).attr("href"); // trim the extra "/" of NCH
+			//System.out.println(result.nextPageUrl);
+
+			/*
+			System.out.println("url size: " + url.size());
+			for (Element u : url) {
+				System.out.println(u.toString());
+			}
+			 */
+		}
+		//System.out.println("totalPage: " + result.totalPages);
+		/*
+		System.out.println("info size: " + info.size());
+		for (Element i : info) {
+			System.out.println(i.text());
+		}
+		 */
+		return result;
 	}
 }

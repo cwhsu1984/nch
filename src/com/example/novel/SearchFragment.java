@@ -8,23 +8,24 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.example.novel.asynctask.AsyncSearchTask;
 import com.example.novel.parser.Novel;
+import com.example.novel.parser.SearchResult;
 
 public class SearchFragment extends Fragment {
-	
+
 	Spinner mOption;
 	TextView mInput;
 	Button mSearch;
@@ -37,12 +38,12 @@ public class SearchFragment extends Fragment {
 	static final String SEARCH_VALUE = "&various=";
 	static final String BIG5 = "big5";
 	int mSelection;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -52,22 +53,22 @@ public class SearchFragment extends Fragment {
 		setButton();
 		return view;
 	}
-	
+
 	private void setView(View view) {
 		mOption = (Spinner) view.findViewById(R.id.option);
 		mInput = (TextView) view.findViewById(R.id.input);
 		mSearch = (Button) view.findViewById(R.id.search_button);
 		mResult = (ListView) view.findViewById(R.id.result);
 	}
-	
+
 	private void setSpinner() {
 		Resources resources = getActivity().getResources();
 		ArrayAdapter<String> adapter = new ArrayAdapter<String> (getActivity(),
-				android.R.layout.simple_spinner_item, 
+				android.R.layout.simple_spinner_item,
 				new String[] {
-					resources.getString(R.string.search_writer),
-					resources.getString(R.string.search_book)}
-					);
+			resources.getString(R.string.search_writer),
+			resources.getString(R.string.search_book)}
+				);
 		mOption.setAdapter(adapter);
 		mOption.setOnItemSelectedListener(new OnItemSelectedListener() {
 			@Override
@@ -77,10 +78,10 @@ public class SearchFragment extends Fragment {
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> adapterView) {
-			}				
+			}
 		});
 	}
-	
+
 	private void setButton() {
 		mSearch.setOnClickListener(new OnClickListener() {
 			@Override
@@ -89,7 +90,7 @@ public class SearchFragment extends Fragment {
 					// Encode search value as big5.
 					String value = java.net.URLEncoder.encode(
 							mInput.getText().toString(),
-							BIG5);						
+							BIG5);
 					AsyncSearchTask.run(
 							getActivity(),
 							SEARCH_URL + SEARCH_KEY + mSelection + SEARCH_VALUE + value);
@@ -97,29 +98,33 @@ public class SearchFragment extends Fragment {
 					e.printStackTrace();
 				}
 			}
-			
+
 		});
 	}
-	
-	public void setListView(ArrayList<Novel> novels) {
+
+	public void setListView(final SearchResult result) {
 		// Replace from here to adapter later.
 		ArrayList<String> books = new ArrayList<String> ();
-		for (Novel novel : novels) {
+		for (Novel novel : result.novels) {
 			books.add(novel.name);
 		}
 		ArrayAdapter<String> adapter = new ArrayAdapter<String> (getActivity(),
 				android.R.layout.simple_list_item_1,
 				books
-		);
+				);
 		mResult.setAdapter(adapter);
 		mResult.setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view,
 					int position, long id) {
-				Toast.makeText(getActivity(), position + " " + id + " ", Toast.LENGTH_LONG).show();
+				// Start article activity here.
+				Novel novel = result.novels.get(position);
+				Toast.makeText(getActivity(), "position: " + position +
+						", id: " + id +
+						", novel name: " + novel.name +
+						"\n" + "novel url:" + novel.nameUrl , Toast.LENGTH_LONG).show();
 			}
-			
+
 		});
 	}
 }
