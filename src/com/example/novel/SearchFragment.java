@@ -39,7 +39,7 @@ public class SearchFragment extends Fragment {
 	static final String VARIOUS = "various="; // String of various field
 	static final String PAGE = "&page="; // String of page field
 	int mOptionSelected; // Option selected 0:writer 1: book
-	static final int LOAD_ITEM_THRESHOLD = 15; // Item threshold before loading more items.
+	static final int LOAD_ITEM_THRESHOLD = 40; // Item threshold before loading more items.
 	// The larger this value is, the earlier the remaining data is loaded.
 	SearchResult mPreviousResult; // Previous search result
 	ArrayList<String> mItems; // Content of ArrayAdapter
