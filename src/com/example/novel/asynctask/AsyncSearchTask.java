@@ -6,6 +6,10 @@ import com.example.novel.SearchActivity;
 import com.example.novel.parser.SearchResult;
 import com.example.novel.parser.SearchResultParser;
 
+/*
+ * The AsyncSearchTask is created to deal with the search api and returns
+ * the search result.
+ */
 public class AsyncSearchTask extends CommonAsyncTask {
 
 	static boolean mRunning = false;
@@ -26,7 +30,7 @@ public class AsyncSearchTask extends CommonAsyncTask {
 
 	@Override
 	protected Object doInBackGround() {
-		// Get result of data
+		// Parse the response and return the result.
 		return SearchResultParser.parse(responseBody);
 	}
 
@@ -37,6 +41,10 @@ public class AsyncSearchTask extends CommonAsyncTask {
 		mRunning = false;
 	}
 
+	/*
+	 * Tell if the task is running.
+	 * @return true if the task is running, false otherwise.
+	 */
 	public static boolean isRunning() {
 		return mRunning;
 	}

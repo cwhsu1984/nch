@@ -34,6 +34,10 @@ public class SearchActivity extends FragmentActivity {
 		return true;
 	}
 
+	/*
+	 * Get fragment of SearchFragment.
+	 * @return the search fragment.
+	 */
 	public SearchFragment geSearchFragment() {
 		return mSearchFragment;
 	}

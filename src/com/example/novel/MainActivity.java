@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity {
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,7 +32,7 @@ public class MainActivity extends FragmentActivity {
 		static final int WRITER = 5;
 		static final int GUESTBOOK = 6;
 		static final int HOT = 7;
-		
+
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState);
@@ -42,6 +42,9 @@ public class MainActivity extends FragmentActivity {
 			setListAdapter(adapter);
 		}
 
+		/*
+		 * Initialize data of the menu on MainActivity.
+		 */
 		private void initializeMenu() {
 			Resources resources = getActivity().getResources();
 			menu = new String[] {
@@ -55,33 +58,33 @@ public class MainActivity extends FragmentActivity {
 					resources.getString(R.string.hot)
 			};
 		}
-		
+
 		@Override
 		public void onListItemClick(ListView l, View v, int position, long id) {
 			switch (position) {
 			case SEARCH:
 				Intent intent = new Intent();
-	            intent.setClass(getActivity(), SearchActivity.class);
-	            //intent.putExtra("index", index);
-	            startActivity(intent);
+				intent.setClass(getActivity(), SearchActivity.class);
+				startActivity(intent);
 				break;
+				// TODO: Add other activities later.
 				/*
 			case ADD:
 				break;
 			case HOT:
 				break;
-				*/
+				 */
 			default:
 				Toast.makeText(getActivity(), "TODO", Toast.LENGTH_LONG).show();
 			}
 		}
-		
+
 		@Override
-	    public void onAttach(Activity activity) {
-	        super.onAttach(activity);
-	    }
+		public void onAttach(Activity activity) {
+			super.onAttach(activity);
+		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

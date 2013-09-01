@@ -39,7 +39,8 @@ public class SearchFragment extends Fragment {
 	static final String VARIOUS = "various="; // String of various field
 	static final String PAGE = "&page="; // String of page field
 	int mOptionSelected; // Option selected 0:writer 1: book
-	static final int LOAD_ITEM_THRESHOLD = 15; // Item threshold before loading more items
+	static final int LOAD_ITEM_THRESHOLD = 15; // Item threshold before loading more items.
+	// The larger this value is, the earlier the remaining data is loaded.
 	SearchResult mPreviousResult; // Previous search result
 	ArrayList<String> mItems; // Content of ArrayAdapter
 
@@ -61,6 +62,7 @@ public class SearchFragment extends Fragment {
 
 	/*
 	 * Setup view with layout component.
+	 * @param view is the top-level view of this fragment.
 	 */
 	private void setView(View view) {
 		mOption = (Spinner) view.findViewById(R.id.option);
@@ -114,6 +116,9 @@ public class SearchFragment extends Fragment {
 
 	/*
 	 * Encode the given string with given code.
+	 * @param value is the string to be encoded.
+	 * @param code is the encoding-type such as utf-8 and big5.
+	 * @return the encoded string.
 	 */
 	private String encode(String value, String code) {
 		try {
@@ -139,6 +144,8 @@ public class SearchFragment extends Fragment {
 
 	/*
 	 * Encode the various field in the url.
+	 * @param url is the string containing the various.
+	 * @return the string that its various is being encoded.
 	 */
 	private String encodeVariousInUrl(String url) {
 		String various = url.substring(
@@ -150,6 +157,7 @@ public class SearchFragment extends Fragment {
 
 	/*
 	 * Setup ListView.
+	 * @param currentResult is the current search result.
 	 */
 	public void setListView(SearchResult currentResult) {
 		// No match result.
@@ -171,8 +179,8 @@ public class SearchFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view,
 					int position, long id) {
-				// Start article activity here.
 				//System.out.println("position: " + position + " result size: " + result.name.size());
+				// TODO: Replace the toast by starting an article activity.
 				Toast.makeText(getActivity(), "position: " + position +
 						", id: " + id +
 						", novel name: " + result.name.get(position) +
@@ -182,7 +190,7 @@ public class SearchFragment extends Fragment {
 		mResult.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				// Load next page when it's about to the bottom of the list and the current
+				// Load the next page when it's about to the bottom of the list and the current
 				// page is not the last page.
 				if (firstVisibleItem + LOAD_ITEM_THRESHOLD + visibleItemCount >= totalItemCount // About to bottom
 						&& !AsyncSearchTask.isRunning() // No task running

@@ -14,9 +14,9 @@ import android.os.AsyncTask;
 
 abstract class CommonAsyncTask extends AsyncTask<Void, Void, Object> {
 
-	final Activity activity;
-	String request;
-	String responseBody;
+	final Activity activity; // Activity execute this task.
+	String request; // Request to be performed. This should be the url of a specific api.
+	String responseBody; // Response of the request.
 
 	public CommonAsyncTask(Activity activity, String r) {
 		this.activity = activity;
@@ -43,6 +43,7 @@ abstract class CommonAsyncTask extends AsyncTask<Void, Void, Object> {
 			// immediate deallocation of all system resources
 			httpclient.getConnectionManager().shutdown();
 
+			// Perform the background method for each subclass
 			object = doInBackGround();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

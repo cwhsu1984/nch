@@ -5,9 +5,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+/*
+ * SearchResultParser parses the response of a search request.
+ */
 public class SearchResultParser {
 
+	// The base url of novel channel.
 	static final String NCH = "http://www.nch.com.tw/";
+	// The field id of the novel column.
 	static final int STATE = 1;
 	static final int NAME = 2;
 	static final int AUTHOR = 3;
@@ -17,12 +22,17 @@ public class SearchResultParser {
 	static final int VOTE = 7;
 	static final int COMMENT = 8;
 	static final int COLUMN_SIZE = 9;
-
+	// The field id of the href column.
 	static final int NAME_URL = 0;
 	static final int AUTHOR_URL = 1;
 	static final int VOTE_URL = 2;
 	static final int COMMENT_URL = 3;
 
+	/*
+	 * Parse the html and return the result.
+	 * @param html is the response by a request.
+	 * @return the search result.
+	 */
 	public static SearchResult parse(String html) {
 		Document doc = Jsoup.parse(html);
 		// select novels by table color
@@ -50,7 +60,7 @@ public class SearchResultParser {
 
 				result.state.add(td.get(STATE).text());
 				result.name.add(td.get(NAME).text());
-				result.author.add(td.get(AUTHOR).text());
+				result.writer.add(td.get(AUTHOR).text());
 				result.serial.add(td.get(SERIAL).text());
 				result.update.add(td.get(UPDATE).text());
 				result.popularity.add(td.get(POPULARITY).text());
@@ -60,7 +70,7 @@ public class SearchResultParser {
 
 				Elements href = t.select("td").select("a[href]");
 				result.nameUrl.add(NCH + href.get(NAME_URL).attr("href"));
-				result.authorUrl.add(NCH + href.get(AUTHOR_URL).attr("href"));
+				result.writerUrl.add(NCH + href.get(AUTHOR_URL).attr("href"));
 				result.voteUrl.add(NCH + href.get(VOTE_URL).attr("href"));
 				result.commentUrl.add(NCH + href.get(COMMENT_URL).attr("href"));
 				//System.out.println(novel);
