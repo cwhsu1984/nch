@@ -1,7 +1,5 @@
 package com.example.novel.parser;
 
-import java.util.ArrayList;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -30,9 +28,8 @@ public class SearchResultParser {
 		// select novels by table color
 		Elements tables = doc.select("tr[bgcolor=#9BC2E3], tr[bgcolor=#E1E1E1]");
 		SearchResult result = new SearchResult();
-		ArrayList<Novel> novels = result.novels;
 
-		System.out.println("table size " + tables.size());
+		//System.out.println("table size " + tables.size());
 		for (Element t : tables) {
 			Elements td = t.select("td").select("font");
 
@@ -51,24 +48,22 @@ public class SearchResultParser {
 			// Prevent index out of bounds by checking column size
 			if (td.size() >= COLUMN_SIZE) {
 
-				Novel novel = new Novel();
-				novel.state = td.get(STATE).text();
-				novel.name = td.get(NAME).text();
-				novel.author = td.get(AUTHOR).text();
-				novel.serial = td.get(SERIAL).text();
-				novel.update = td.get(UPDATE).text();
-				novel.popularity = td.get(POPULARITY).text();
-				novel.vote = td.get(VOTE).text();
-				novel.commentUrl = td.get(COMMENT).text();
+				result.state.add(td.get(STATE).text());
+				result.name.add(td.get(NAME).text());
+				result.author.add(td.get(AUTHOR).text());
+				result.serial.add(td.get(SERIAL).text());
+				result.update.add(td.get(UPDATE).text());
+				result.popularity.add(td.get(POPULARITY).text());
+				result.vote.add(td.get(VOTE).text());
+				result.commentUrl.add(td.get(COMMENT).text());
 
 
 				Elements href = t.select("td").select("a[href]");
-				novel.nameUrl = NCH + href.get(NAME_URL).attr("href");
-				novel.authorUrl = NCH + href.get(AUTHOR_URL).attr("href");
-				novel.voteUrl = NCH + href.get(VOTE_URL).attr("href");
-				novel.commentUrl = NCH + href.get(COMMENT_URL).attr("href");
+				result.nameUrl.add(NCH + href.get(NAME_URL).attr("href"));
+				result.authorUrl.add(NCH + href.get(AUTHOR_URL).attr("href"));
+				result.voteUrl.add(NCH + href.get(VOTE_URL).attr("href"));
+				result.commentUrl.add(NCH + href.get(COMMENT_URL).attr("href"));
 				//System.out.println(novel);
-				novels.add(novel);
 			}
 		}
 
@@ -76,6 +71,7 @@ public class SearchResultParser {
 		Elements info = doc.select("table").select("[bgcolor=#3366cc]");
 		if (info.size() != 0) {
 			result.totalPages = Integer.valueOf(info.get(1).text());
+			result.currentPage = Integer.valueOf(info.get(2).text());
 
 			// Select the url of the next page.
 			Elements url = doc.select("table").select("[bgcolor=#c0c0c0]").select("a[href]");

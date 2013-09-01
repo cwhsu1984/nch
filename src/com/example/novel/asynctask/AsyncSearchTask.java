@@ -1,17 +1,15 @@
 package com.example.novel.asynctask;
 
-import com.example.novel.R;
+import android.app.Activity;
+
 import com.example.novel.SearchActivity;
-import com.example.novel.parser.Novel;
 import com.example.novel.parser.SearchResult;
 import com.example.novel.parser.SearchResultParser;
 
-import android.app.Activity;
-
 public class AsyncSearchTask extends CommonAsyncTask {
-	
-	SearchResult mResult;
-	
+
+	static boolean mRunning = false;
+
 	public AsyncSearchTask(Activity activity, String request) {
 		super(activity, request);
 	}
@@ -21,20 +19,25 @@ public class AsyncSearchTask extends CommonAsyncTask {
 	}
 
 	@Override
-	void doInBackGround() {
-		// Get result of data 
-		mResult = SearchResultParser.parse(responseBody);
-		// Show not found when no result
-		if (mResult.novels.size() == 0) {
-			Novel empty = new Novel();
-			empty.name = activity.getResources().getString(R.string.not_found);
-			mResult.novels.add(empty);
-		}
+	protected final void onPreExecute() {
+		super.onPreExecute();
+		mRunning = true;
 	}
-	
+
 	@Override
-	protected void onPostExecute(){
+	protected Object doInBackGround() {
+		// Get result of data
+		return SearchResultParser.parse(responseBody);
+	}
+
+	@Override
+	protected void onPostExecuteMethod(Object result){
 		// Put retrieved data into ListView
-		((SearchActivity) activity).geSearchFragment().setListView(mResult);
+		((SearchActivity) activity).geSearchFragment().setListView((SearchResult) result);
+		mRunning = false;
+	}
+
+	public static boolean isRunning() {
+		return mRunning;
 	}
 }
